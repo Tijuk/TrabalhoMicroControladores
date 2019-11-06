@@ -35,3 +35,28 @@ Reconhecimento de RFID
 - A porta vai precisar existir e ser firme.
 
 ### Software
+- GPIO, PyAudio
+
+## Reconhecimento Facial
+### Hardware
+- Camera
+
+### Software
+- OpenCV
+
+## Reconhecimento de Palavra Chave
+### Hardware
+- Microfone
+
+### Software
+- Snowboy, DB.
+
+## Spray
+- Esguicho, Servo, GPIO
+
+## QR Code
+### Hardware
+- Visor LED
+
+### Software
+???
