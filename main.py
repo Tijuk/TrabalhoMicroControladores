@@ -1,13 +1,14 @@
-import src.hotword as hotword
 
-def setup()
-	pass
+import src.facialRecognition.recognizer as recognizer
 
-def loop()
-	pass
+def setup():
+    pass
 
-
-def main()
-	setup()
-	while True:
-		loop()
+def main():
+    setup()
+    while True:
+        if recognizer.loop() == 1:
+            break;
+    recognize.onDestroy()
+        
+main()
