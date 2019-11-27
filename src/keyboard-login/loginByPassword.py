@@ -1,7 +1,13 @@
 from pynput.keyboard import Key, Listener
+from threading import Timer
+
+incorrectCounter = 0
 
 correctPassword = '1234'
 passwordTyped = ''
+
+timer = None
+listener = None
 
 def on_press(key):
     global passwordTyped
@@ -13,20 +19,44 @@ def on_press(key):
             checkPassword()
         else:
             print('Invalid character.')
+            
+def stopListener():
+    global timer, listener
+    timer = Timer(3.0, startListener)
+    timer.start()
+    listener.stop()
 
 def checkPassword():
-    global passwordTyped
-    
+    global passwordTyped, incorrectCounter
     if passwordTyped == correctPassword:
         print('Access granted')
+        incorrectCounter = 0
+        printInitialMessage()
     else:
-        print('Access denied')
-        print('Type the password [hit Enter when ends]: ')
+        incorrectCounter += 1
+        print('Access denied: {0} of 3'.format(incorrectCounter))
+        
+        if (incorrectCounter < 3):
+            printInitialMessage()
+        else:
+            incorrectCounter = 0
+            print('Access blocked. Wait 3 seconds and try again.')
+            stopListener()
     
     passwordTyped = ''
-            
     
-with Listener(
-    on_press = on_press) as listener:
+def printInitialMessage():
     print('Type the password [hit Enter when ends]: ')
-    listener.join()
+    
+def startListener():
+    global timer, listener
+    if (timer != None):
+        timer.cancel()
+        
+    printInitialMessage()
+    
+    listener = Listener(
+        on_press = on_press)
+    listener.start()
+
+startListener()
