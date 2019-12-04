@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "front": "python3 src/frontend/main.py"
   },
   "repository": {
     "type": "git",
