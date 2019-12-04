@@ -1,5 +1,4 @@
 from argparse import ArgumentParser as Parser
-#import src.facialRecognition.recognizer as recognizer
 
 parser = Parser(description = "Trabalho ede MicroControladores")
 parser.add_argument('--hotword', '--h', help= "executa utilizando hotword detection", choices  = ["run", "train"])
@@ -7,22 +6,26 @@ parser.add_argument('--facialRecog', '--fr', help = "executa utilizando reconhec
 
 args = parser.parse_args()
 
+subscription = {}
+
 if args.hotword is not None:
-    import hotword as hotword
+    from hotword import HotwordProcess
+    subscription["hotword"] = HotwordProcess(args)
     
 if args.facialRecog:
     print("Executa código de reconhecimento facial")
 
+
+# Faca o "subscription" do processo antes daqui ----------------------------------------------------------
+
 def setup():
-    pass
+    for subscribed in subcription:
+        subscribed.setup()
 
 def main():
-    setup()
-    print("ta sussa")
     while True:
-        break
-#        if recognizer.loop() == 1:
-#            break;
-#    recognize.onDestroy()
-        
+        for subscribed in subcription:
+            subscribed.loop()
+
+setup()
 main()

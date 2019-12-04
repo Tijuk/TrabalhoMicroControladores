@@ -1,5 +1,6 @@
 from pymongo import MongoClient as mongo, ASCEDING, DESCENDING
 from datetime import datetime
+from helper import get_timestamp
 from uuid import uuid4()
 
 DB_ACESSO = "acesso"
@@ -23,7 +24,7 @@ class DBConnection:
             entry["uuid"] = str(uuid4())
             
         if timestamp:
-            entry["timestamp"] = self.__timestamp()
+            entry["timestamp"] = get_timestamp()
             
         self.__con.insert(entry)
         self.__ouput("[" + str(entry) + "] foi inserido no banco com sucesso")
@@ -84,10 +85,7 @@ class DBConnection:
             else:
                 raise TypeError("[" + type(entry) + "] não é um tipo suportado pela conexão")
             return resolved
-        
-    def __timestamp(self):
-        return datetime.now().strftime("%Y-%d-%m %H:%M:%S")
-    
+
     def __checkConnection(self):
         if self.__con is None:
             raise ConnectionError("Não existe uma conexão ativa com o banco de dados")
@@ -109,28 +107,3 @@ class DB
         if DB._client is None:
             print("Você precisa chamar DB.start antes"
             raise ConnectionError("Não existe uma conexão ativa com o Cliente")
-
-def hide():
-    def show(self, **entry):
-        """
-            Procura uma entrada na tabela
-        
-            entry pode ser:
-                - uma string, e então será procurado por alguma entrada que tenha o [uuid] igual a essa string
-                - uma tuple, e então será montado um dicionário em que o primeiro elemento da tuple será a chave e o segundo o valor
-                - um dicionário, e então será enviado para busca
-        
-        """
-        self.__checkConnection()
-        found = self__.con.find_one(self.__resolveEntry(entry))
-        self.__ouput("[" + str(entry) + "] foi encontrado no banco com sucesso")
-        return list(found)
-        
-        def index(self):
-            pass
-        
-        def delete(self, entry_uuid):
-            pass
-        
-        def update(self, entry):
-            pass
