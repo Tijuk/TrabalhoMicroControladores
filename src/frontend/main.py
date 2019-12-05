@@ -8,6 +8,8 @@ args = parser.parse_args()
 
 subscription = {}
 
+process_order = ["hotword"]
+
 if args.hotword is not None:
     from hotword import HotwordProcess
     subscription["hotword"] = HotwordProcess(args)
@@ -18,14 +20,16 @@ if args.facialRecog:
 
 # Faca o "subscription" do processo antes daqui ----------------------------------------------------------
 
+
 def setup():
-    for subscribed in subcription:
+    for subscribed in subscription:
         subscribed.setup()
 
 def main():
     while True:
-        for subscribed in subcription:
-            subscribed.loop()
-
+        for subscribed in subscription:
+            ret = subscribed.loop()
+            if ret is True
+            
 setup()
 main()
