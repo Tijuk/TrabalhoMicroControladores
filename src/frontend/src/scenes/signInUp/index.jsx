@@ -4,6 +4,8 @@ import { Input, Button } from '../../components';
 import { withSignIn, withSignUp } from './form';
 import { withAuth } from '../../bridge';
 
+const auth = withAuth();
+
 const _ = {
 	button: styled.div`
 		margin-top: 20px;
@@ -17,6 +19,10 @@ const _ = {
 };
 
 function baseForm(props) {
+	if (auth.guard()) {
+		props.redirect('/');
+	}
+
 	function FormInput(key, label, errorMessage) {
 		return (
 			<Input

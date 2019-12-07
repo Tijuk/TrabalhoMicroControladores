@@ -45,7 +45,6 @@ export default function Header(props) {
 
 		const logOutAction = async () => {
 			await auth.logout(() => {
-				console.log('LogOut was sucess');
 				props.redirect('/');
 			});
 		};

@@ -48,16 +48,6 @@ function App() {
 				<Style.body>
 					<Router provider={provider} routes={routes} />
 				</Style.body>
-				{/* <Switch>
-					{routes.map(RouteData => {
-					return (
-						<Route key={`app_route_09581928_${RouteData.path}`} path={RouteData.path}>
-							<RouteData.Component {...provider}/>
-						</Route>
-					)
-					})}
-				</Switch> */}
-
 				{state.redirect ? <Redirect to={state.redirect} /> : null}
 			</BrowserRouter>
 		</Style.app>
