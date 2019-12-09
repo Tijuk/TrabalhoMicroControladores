@@ -87,6 +87,9 @@ export const withUser = () => {
 	return {
 		create: async (userData, onSuccess, onFailure) => {
 			await api.post('create', userData, user => onSuccess(User(user)), onFailure)
+		},
+		delete: async (userUuid, onSuccess, onFailure) => {
+			await api.delete(`delete/${userUuid}`, user => onSuccess(User(user)), onFailure)
 		}
 	}
 }

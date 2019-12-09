@@ -3,6 +3,7 @@ import {
 	SignUp
 } from './signInUp'
 import Home from './homepage'
+import Users from './users'
 
 
 
@@ -45,7 +46,7 @@ export default {
 	},
 	users: {
 		path: "/users",
-		Component: Home,
+		Component: Users,
 	}
 }
 

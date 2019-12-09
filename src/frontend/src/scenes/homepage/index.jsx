@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { withAuth, withLog, withUser } from '../../bridge';
 import { Button, Table, Input } from '../../components';
-import {format, formatDistanceToNow} from 'date-fns'
+import {format, formatDistanceToNow, subSeconds } from 'date-fns'
 import ptBr from 'date-fns/locale/pt-BR'
 
 
@@ -17,11 +17,10 @@ const Upper = styled.div`
 export default function Home(props) {
 	const auth = withAuth();
 	const log = withLog();
-	const users = withUser();
 
 	const [state, setState] = useState({
 		log: new Array(25).fill(0).map((_, index) => ({
-			timestamp: format(new Date(2019,11,7, index%24, (index*2)%60, 0), 'dd/MM/yyyy HH:mm:ss'),
+			timestamp: formatDistanceToNow(subSeconds(new Date(), (index*2)), { locale: ptBr , addSuffix: true, includeSeconds: true }),
 			user: `uuid_${Math.random().toFixed(index + 1).replace(/\D/g, '')}`,
 			metodo: 'RFID',
 			uuid: `uuid_${Math.random().toFixed(6).replace(/\D/g, '')}`,

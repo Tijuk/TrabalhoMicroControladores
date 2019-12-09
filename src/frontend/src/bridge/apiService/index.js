@@ -31,7 +31,7 @@ const base_axios = ax.create({
 const mock_axios = {
 	post: async (route, args) => {
 		print(`mocking post on route ${route} with args: `, args);
-		return await wait(500, {
+		return await wait(500, debugging && {
 			token: 'ijio2n2junf12uinf13',
 			user: {
 				name: "Joao",
