@@ -9,6 +9,7 @@ import numpy as np
 import os
 from pynput.keyboard import Key, Listener
 from threading import Timer
+from pymongo import MongoClient, ASCENDING, DESCENDING
 
 lcd = Adafruit_CharLCD(7, 13, 6, 24, 5, 16, 20, 4)
 
@@ -39,12 +40,10 @@ CARTOES_LIBERADOS = {
 
 SENHAS_LIBERADAS = {
     '1234' : 'Joao Guilherme',
-    '6969' : 'Joao Marcelo'
+    '2001' : 'Joao Marcelo'
 }
 
-
-
-flag=0
+flag = 0
 
 numPessoa = 0
 
@@ -92,7 +91,7 @@ def checkPassword():
     if passwordTyped in SENHAS_LIBERADAS:
         numPessoa = passwordTyped
         reconhecimentoFacial('Senha')
-        time.sleep(1)
+        time.sleep(2)
         incorrectCounter = 0
         printInitialMessage()
     else:
@@ -186,7 +185,7 @@ def reconhecimentoFacial(tipoAcessoPrimario):
                             
              if (id != names[0]):
                 lcd.clear()
-                lcd.message("Rosto desconhecido")
+                lcd.message("Rosto desconhecido \nPressione <-\npara voltar")
                 break
                             
              putText(img, str(id), (x+5,y-5), font, 1, (255,255,255), 2)
@@ -203,53 +202,51 @@ def reconhecimentoFacial(tipoAcessoPrimario):
         
     cam.release()
     destroyAllWindows()
+
     
 try:
     # Inicia o módulo RC522.
     LeitorRFID = MFRC522.MFRC522()
     startListener()
-    
-    while True:
-        # Verifica se existe uma tag próxima do módulo.
-        status, tag_type = LeitorRFID.MFRC522_Request(LeitorRFID.PICC_REQIDL)
-        if (status == LeitorRFID.MI_OK and flag==0):
-            
-            lcd.clear()
-            lcd.message('Cartao detectado!')
-            flag=1
-            # Efetua leitura do UID do cartão.
-            status, uid = LeitorRFID.MFRC522_Anticoll()
- 
-            if status == LeitorRFID.MI_OK:
-                uid = ':'.join(['%X' % x for x in uid])
+    while True:         
+            status, tag_type = LeitorRFID.MFRC522_Request(LeitorRFID.PICC_REQIDL)
+            if (status == LeitorRFID.MI_OK and flag==0):
+                
                 lcd.clear()
-                lcd.message('UID do cartao: %s' % uid)
-                
-                
-                # Se o cartão está liberado exibe mensagem de boas vindas.
-                if uid in CARTOES_LIBERADOS:
-                    numPessoa = uid
-                    p = GPIO.PWM(pin, 1024)
-                    p.start(99)
-                    sleep(1)
-                    p.stop()
-                    
-                    reconhecimentoFacial('RfID')
-                        
-                    
-                else:
+                lcd.message('Cartao detectado!')
+                flag=1
+                # Efetua leitura do UID do cartão.
+                status, uid = LeitorRFID.MFRC522_Anticoll()
+     
+                if status == LeitorRFID.MI_OK:
+                    uid = ':'.join(['%X' % x for x in uid])
                     lcd.clear()
-                    lcd.message('Acesso negado!')
-                 
-                time.sleep(1)
-                printInitialMessage()
+                    lcd.message('UID do cartao: %s' % uid)
+                    
+                    
+                    # Se o cartão está liberado exibe mensagem de boas vindas.
+                    if uid in CARTOES_LIBERADOS:
+                        numPessoa = uid
+                        p = GPIO.PWM(pin, 1024)
+                        p.start(99)
+                        sleep(1)
+                        p.stop()
+                        
+                        reconhecimentoFacial('RfID')
+                            
+                        
+                    else:
+                        lcd.clear()
+                        lcd.message('Acesso negado!')
+                     
+                    time.sleep(2)
+                    printInitialMessage()
+                    
+            elif(status == LeitorRFID.MI_ERR and flag==1):
+                flag = 0
+                time.sleep(5)
                 
-        elif(status == LeitorRFID.MI_ERR and flag==1):
-            flag = 0
-            time.sleep(5)
-            
-        time.sleep(2)
-
+            time.sleep(2)
 
 except KeyboardInterrupt:
     # Se o usuário precionar Ctrl + C
