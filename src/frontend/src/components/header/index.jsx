@@ -45,9 +45,6 @@ export default function Header(props) {
 
     function headerButtons() {
         const headerButton = (content, linkTo, additionalAction = null) => (
-            // (<Link to={linkTo}>
-            // 	<Button onClick={additionalAction} type="nav" content={content} />
-            // </Link>)
             <Button
                 onClick={additionalAction || (() => props.redirect(linkTo))}
                 type="nav"

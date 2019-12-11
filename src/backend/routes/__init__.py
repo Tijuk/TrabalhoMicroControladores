@@ -29,9 +29,9 @@ def get_app(name):
 		# return user
 		if user is not None:
 			token = AuthController.logIn(user)
-			return { "token": str(token),  "data": user_resource(user), "status": 200, "message": "Usuario logado com sucesso" }
+			return serialize(data = {"token": str(token),  "user": user_resource(user)}, status= 200, message = "Usuario logado com sucesso")
 		else:
-			return { "status": 422, "message": "Senha incorreta" }
+			return serialize(status= 422, message = "Senha incorreta")
 
 
 	@app.route('/auth/logout', methods=['POST'])
@@ -44,7 +44,7 @@ def get_app(name):
 	def user_create():
 		try:
 			user = UserController.create(request.get_json())
-			return serialize(data = user, message = "Usuario criado com sucesso")
-		except:
-			return serialize(status = 500, message = "Falha ao criar Usuário")
+			return serialize(data = user_resource(user), message = "Usuario criado com sucesso")
+		except Exception as exp:
+			return serialize(data = str(exp), status = 500, message = "Falha ao criar Usuário")
 	return app

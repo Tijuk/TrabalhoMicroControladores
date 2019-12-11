@@ -14,10 +14,10 @@ export const withAuth = () => {
 
 	const login = async (name, password, onSuccess, onFailure) => {
 		const successWrapp = (response) => {
-			console.error(response.token)
-			console.error(response.data)
+			console.error("__Token: ", response.token)
+			console.error("__Data: ", response.data)
 			localStorage.setItem('token', response.token)
-			localStorage.setItem('user', JSON.stringify(response.data))
+			localStorage.setItem('user', JSON.stringify(response.user))
 
 			console.error(localStorage.getItem('user'))
 			onSuccess(response)
@@ -28,6 +28,8 @@ export const withAuth = () => {
 		}, successWrapp, onFailure)
 	}
 	const logout = async (onSuccess, onFailure) => {
+
+		console.warn("Token: ", localStorage.getItem('token'))
 		const successWrapp = (response) => {
 			console.warn(response)
 			localStorage.clear()
@@ -42,16 +44,24 @@ export const withAuth = () => {
 
 	const getUser = () => {
 		const localUser = localStorage.getItem('user')
-		console.log("Loaded local user = ", localUser)
-		let parsed = undefined
-		if (!localUser) {
-			parsed = JSON.parse(localUser)
-		}
-		return User(parsed || {
-			name: "Joao",
-			uuid: "ohdauhda",
-			type: "admin"
-		})
+		// console.log("Loaded local user = ", localUser)
+		// let parsed = undefined
+		// if (typeof localUser === 'string') {
+		// 	parsed = JSON.parse(localUser)
+		// }
+		// if (localUser) {
+		// 	return {
+		// 		name: parsed.name,
+		// 		uuid: parsed.uuid,
+		// 		type: parsed.type,
+		// 		isAuthenticated: true
+		// 	}
+		// } else {
+		// 	return {
+		// 		isAuthenticated: false
+		// 	}
+		// }
+		return JSON.parse(localUser)
 	}
 
 	return {
@@ -92,12 +102,12 @@ export const withUser = () => {
 	})
 
 	return {
-		create: async (userData, onSuccess, onFailure) => {
+		create: async (parsed, onSuccess, onFailure) => {
 			const successWrap = (user) => {
 				console.warn('Usuário criado')
-				auth.login(userData.name, userData.password, () => onSuccess(User(user)), onFailure)
+				auth.login(parsed.name, parsed.password, () => onSuccess(User(user)), onFailure)
 			}
-			await api.post('create', userData, successWrap, onFailure)
+			await api.post('create', parsed, successWrap, onFailure)
 		},
 		delete: async (userUuid, onSuccess, onFailure) => {
 			await api.delete(`delete/${userUuid}`, user => onSuccess(User(user)), onFailure)

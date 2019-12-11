@@ -17,18 +17,14 @@ function wait(ms, callback) {
 }
 
 const getHeaders = () => {
-	const token = localStorage.getItem('token')
-	if (token) {
-		return {
-			Authorization: {
-				toString() {
-					return `Bearer ${localStorage.getItem('token')}`
-				}
+	return {
+		Authorization: {
+			toString() {
+				const token = localStorage.getItem('token')
+				console.error("Token: ", token)
+				return `Bearer ${token}`
 			}
 		}
-	}
-	return {
-
 	}
 }
 
