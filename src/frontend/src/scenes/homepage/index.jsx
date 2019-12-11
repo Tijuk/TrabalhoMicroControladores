@@ -36,7 +36,7 @@ export default function Home(props) {
         filter: ""
     });
 
-    const isAdmin = state.user && state.user.type === "admin";
+    const isAdmin = true; // state.user && state.user.type === "admin";
 
     const headers = ["Horário", "Nome", "Método"];
     let matrix = state.log

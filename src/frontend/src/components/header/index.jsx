@@ -2,9 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import Button from "../button";
 import { withAuth } from "../../bridge";
-import { color } from "../../assets";
-
-import { Link } from "react-router-dom";
 
 const _ = {
     Main: styled.span`

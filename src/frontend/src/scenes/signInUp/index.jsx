@@ -27,7 +27,7 @@ function baseForm(props) {
         return (
             <Input
                 label={label}
-                type={key === "password" ? key : "text"}
+                type={key === "_password" ? key : "text"}
                 name={key}
                 onChange={props.handleChange}
                 onBlur={props.handleBlur}
