@@ -38,7 +38,7 @@ CARTOES_LIBERADOS = {
 }
 
 SENHAS_LIBERADAS = {
-    '1234' : 'Joao Guilherme'
+    '1234' : 'Joao Guilherme',
     '6969' : 'Joao Marcelo'
 }
 
@@ -133,7 +133,7 @@ def reconhecimentoFacial(tipoAcessoPrimario):
     cam = VideoCapture(0)
                     
     lcd.clear()
-    lcd.message('Olhe para a camera')
+    lcd.message('Olhe para a camera\nOu aperte backspace')
                     
     # Define min window size to be recognized as a face
     minW = 0.1*cam.get(3)
@@ -194,8 +194,11 @@ def reconhecimentoFacial(tipoAcessoPrimario):
                     
         imshow("camera",img) 
 
-        k = waitKey(10) & 0xff # Press 'ESC' for exiting video
-        if k == 27:
+        k = waitKey(10) & 0xff # Press 'backspace' for exiting video
+        if k == 8:
+            lcd.clear()
+            lcd.message("Saindo da validacao\nde dois passos")
+            sleep(1.5)
             break
         
     cam.release()
