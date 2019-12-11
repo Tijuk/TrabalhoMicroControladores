@@ -1,6 +1,6 @@
 from helper.fileResolver import Resolver as _Resolver
 
-def get_timestamp()
+def get_timestamp():
 	from datetime import datetime as dt
 	return dt.now().strftime("%Y-%d-%m %H:%M:%S")
 	

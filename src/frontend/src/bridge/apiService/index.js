@@ -2,7 +2,7 @@ import ax from 'axios'
 
 const debugging = true
 
-const print = debugging ? console.log : ((a, b = "") => {})
+const print = debugging ? console.log : ((a, b = "") => { })
 
 function wait(ms, callback) {
 	return new Promise(res => {
@@ -16,14 +16,27 @@ function wait(ms, callback) {
 	})
 }
 
-const base_axios = ax.create({
-	baseURL: 'localhost:8000/api/',
-	headers: {
-		Authorization: {
-			toString() {
-				return `Bearer ${localStorage.getItem('token')}`
+const getHeaders = () => {
+	const token = localStorage.getItem('token')
+	if (token) {
+		return {
+			Authorization: {
+				toString() {
+					return `Bearer ${localStorage.getItem('token')}`
+				}
 			}
-		},
+		}
+	}
+	return {
+
+	}
+}
+
+const base_axios = ax.create({
+	baseURL: 'http://127.0.0.1:5000',
+	headers: {
+		...getHeaders(),
+		"Access-Control-Allow-Origin": "http://127.0.0.1:5000",
 		'Content-Type': 'application/json'
 	}
 })
@@ -31,14 +44,16 @@ const base_axios = ax.create({
 const mock_axios = {
 	post: async (route, args) => {
 		print(`mocking post on route ${route} with args: `, args);
-		return await wait(500, debugging && {
-			token: 'ijio2n2junf12uinf13',
-			user: {
-				name: "Joao",
-				uuid: "ohdauhda",
-				type: "admin"
-			}
-		})
+		return await wait(500
+			// 	, debugging && {
+			// 	token: 'ijio2n2junf12uinf13',
+			// 	user: {
+			// 		name: "Joao",
+			// 		uuid: "ohdauhda",
+			// 		type: "admin"
+			// 	}
+			// }
+		)
 	},
 	get: async (route) => {
 		print(`mocking get on route ${route}`);
@@ -54,9 +69,9 @@ const mock_axios = {
 	}
 }
 
-const axios = debugging ? mock_axios : base_axios
+const axios = base_axios // debugging ? mock_axios : base_axios
 
-const __nothing__ = (...args) => {}
+const __nothing__ = (...args) => { }
 
 const _ = {
 	parse: (response, callback) => {
@@ -67,20 +82,21 @@ const _ = {
 		}
 	},
 	dispatchCallback: (response, onSuccess, onError) => {
-		console.log('dispatch', response)
+		const data = response.data
+		console.warn('Response: ', response)
 		try {
-			if ([500, 501].includes(response.data.status)) {
+			if (data.status === 200 || data.status === 201) {
 				console.warn('Calling on success')
-				console.log(onSuccess)
-				onSuccess(response.data.data)
+				onSuccess(data.data)
 			} else {
-				console.error(response)
-				onError(response.data.data)
+				console.error(data)
+				onError(data.data)
 			}
-		} catch (e) {
-			console.error(`Catched...`, response)
+		} catch (error) {
+			console.error(error)
+			console.error(`Catched...`, data)
 			console.log('-='.repeat(20) + "-")
-			console.error(e)
+			console.error(error)
 			onSuccess({})
 		}
 	}
@@ -95,7 +111,8 @@ function init(configs) {
 			const response = await axios.post(`${baseRoute}${route}`, args)
 
 			_.dispatchCallback(response, onSuccess, onError)
-		} catch {
+		} catch (error) {
+			console.error(error)
 			_.parse(null, onError)
 		}
 	}
@@ -104,10 +121,11 @@ function init(configs) {
 		try {
 			print(`Calling get on route: ${route}`)
 			const response = await axios.post(`${baseRoute}${route}`)
-
+			print(`Response:`, response)
 			_.dispatchCallback(response, onSuccess, onError)
 
-		} catch {
+		} catch (error) {
+			console.error(error)
 			_.parse(null, onError)
 		}
 	}
@@ -116,10 +134,11 @@ function init(configs) {
 		try {
 			print(`Calling put on route: ${route}`)
 			const response = await axios.put(`${baseRoute}${route}`)
-
+			print(`Response:`, response)
 			_.dispatchCallback(response, onSuccess, onError)
 
-		} catch {
+		} catch (error) {
+			console.error(error)
 			_.parse(null, onError)
 		}
 	}
@@ -128,10 +147,11 @@ function init(configs) {
 		try {
 			print(`Calling delete on route: ${route}`)
 			const response = await axios.delete(`${baseRoute}${route}`)
-
+			print(`Response:`, response)
 			_.dispatchCallback(response, onSuccess, onError)
 
-		} catch {
+		} catch (error) {
+			console.error(error)
 			_.parse(null, onError)
 		}
 	}

@@ -5,7 +5,7 @@ import {
 
 const debuging = true
 
-const print = debuging ? console.log : (...args) => {}
+const print = debuging ? console.log : (...args) => { }
 
 export const withAuth = () => {
 	const api = initAPI({
@@ -14,8 +14,12 @@ export const withAuth = () => {
 
 	const login = async (name, password, onSuccess, onFailure) => {
 		const successWrapp = (response) => {
+			console.error(response.token)
+			console.error(response.data)
 			localStorage.setItem('token', response.token)
 			localStorage.setItem('user', JSON.stringify(response.data))
+
+			console.error(localStorage.getItem('user'))
 			onSuccess(response)
 		}
 		await api.post("login", {
@@ -25,6 +29,7 @@ export const withAuth = () => {
 	}
 	const logout = async (onSuccess, onFailure) => {
 		const successWrapp = (response) => {
+			console.warn(response)
 			localStorage.clear()
 			onSuccess(response)
 		}
@@ -80,13 +85,19 @@ export const withLog = () => {
 }
 
 export const withUser = () => {
+	const auth = withAuth();
+
 	const api = initAPI({
-		baseRoute: 'user'
+		baseRoute: 'users'
 	})
 
 	return {
 		create: async (userData, onSuccess, onFailure) => {
-			await api.post('create', userData, user => onSuccess(User(user)), onFailure)
+			const successWrap = (user) => {
+				console.warn('Usuário criado')
+				auth.login(userData.name, userData.password, () => onSuccess(User(user)), onFailure)
+			}
+			await api.post('create', userData, successWrap, onFailure)
 		},
 		delete: async (userUuid, onSuccess, onFailure) => {
 			await api.delete(`delete/${userUuid}`, user => onSuccess(User(user)), onFailure)

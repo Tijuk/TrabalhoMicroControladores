@@ -1,5 +1,6 @@
 {
 	"workbench.tree.indent": 16,
 	"prettier.tabWidth": 4,
-	"editor.formatOnSave": true
+	"editor.formatOnSave": true,
+	"python.pythonPath": "C:\\Users\\tijuk\\envs\\micro\\Scripts\\python.exe"
 }
