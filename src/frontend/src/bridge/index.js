@@ -75,12 +75,12 @@ export const withAuth = () => {
 
 export const withLog = () => {
 	const api = initAPI({
-		baseRoute: 'log'
+		baseRoute: 'log_access'
 	})
 
 
-	const fetchAll = () => {
-
+	const fetchAll = async (onSuccess, onFailure = ((...args) => { })) => {
+		await api.post(`get_them_all`, {}, onSuccess, onFailure)
 	}
 
 	const del = async (log_uuid, onSuccess, onFailure) => {

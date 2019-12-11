@@ -47,4 +47,12 @@ def get_app(name):
 			return serialize(data = user_resource(user), message = "Usuario criado com sucesso")
 		except Exception as exp:
 			return serialize(data = str(exp), status = 500, message = "Falha ao criar Usuário")
+
+
+	@app.route('/log_access/get_them_all', methods = ['POST'])
+	def log_get_them_all():
+		data = request.get_json()
+		logs = [{ "uuid" : "ahahaha"}]
+		return serialize(data = logs, message = "Logs criados com sucesso")
+
 	return app
